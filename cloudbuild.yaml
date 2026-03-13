@@ -4,10 +4,16 @@ steps:
     args:
       - '-c'
       - |
-        echo "VITE_API_URL=${_VITE_API_URL}" > .env
-        echo "VITE_APP_HOST=${_VITE_APP_HOST}" >> .env
-        echo "VITE_OVERLAY_HOST=${_VITE_OVERLAY_HOST}" >> .env
-        echo "VITE_APP_TOKEN=${_VITE_APP_TOKEN}" >> .env
+        echo "VITE_API_URL=$VITE_API_URL" > .env
+        echo "VITE_APP_HOST=$VITE_APP_HOST" >> .env
+        echo "VITE_OVERLAY_HOST=$VITE_OVERLAY_HOST" >> .env
+        echo "VITE_APP_TOKEN=$VITE_APP_TOKEN" >> .env
+        echo "Build variables generated in .env"
+    env:
+      - 'VITE_API_URL=${_VITE_API_URL}'
+      - 'VITE_APP_HOST=${_VITE_APP_HOST}'
+      - 'VITE_OVERLAY_HOST=${_VITE_OVERLAY_HOST}'
+      - 'VITE_APP_TOKEN=${_VITE_APP_TOKEN}'
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/elecciones-web:$SHORT_SHA', '.' ]
   - name: 'gcr.io/cloud-builders/docker'
