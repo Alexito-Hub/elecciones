@@ -9,7 +9,18 @@ RUN npm ci
 
 # Copy sources
 COPY . ./
-COPY .env .env
+
+# Define build arguments for Vite environment variables
+ARG VITE_API_URL
+ARG VITE_APP_HOST
+ARG VITE_OVERLAY_HOST
+ARG VITE_APP_TOKEN
+
+# Set environment variables for the build process
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_APP_HOST=$VITE_APP_HOST
+ENV VITE_OVERLAY_HOST=$VITE_OVERLAY_HOST
+ENV VITE_APP_TOKEN=$VITE_APP_TOKEN
 
 # Build the app
 RUN npm run build
