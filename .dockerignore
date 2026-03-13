@@ -6,4 +6,3 @@ dist
 Dockerfile
 cloudbuild.yaml
 npm-debug.log
-.env
