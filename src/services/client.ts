@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { CONFIG } from '../config/constants';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: CONFIG.API_URL,
   headers: {
     'Content-Type': 'application/json',
-    'x-app-token': import.meta.env.VITE_APP_TOKEN
+    'x-app-token': CONFIG.APP_TOKEN
   }
 });
 
