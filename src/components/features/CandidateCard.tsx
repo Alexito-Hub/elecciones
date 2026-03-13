@@ -11,7 +11,7 @@ interface CardProps {
 
 const CandidateCard: React.FC<CardProps> = ({
   name, party, votos, pct, selected, onV, onM,
-  rank, color = '#e63c3c', initials = '?', image, enc, sim
+  rank, color = '#e63c3c', initials = '?', image
 }) => {
   const [iErr, setiErr] = useState(false);
   return (

@@ -221,7 +221,7 @@ h1 span {
 .wrap {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 0 16px 80px
+    padding: 0 16px 16px
 }
 
 /* Original Grid & Card */
@@ -244,6 +244,90 @@ h1 span {
     user-select: none;
 }
 
+/* guide page styles */
+.guide-container { padding: 60px 20px; font-family: var(--fb); background: var(--bg); }
+.guide-header { text-align: center; margin-bottom: 40px; }
+.guide-header h1 { font-size: clamp(36px, 8vw, 56px); font-weight: 900; letter-spacing: .03em; color: var(--gold); margin: 0; }
+.guide-header p { color: var(--muted); font-size: 18px; line-height: 1.6; max-width: 760px; margin: 12px auto 0; }
+.guide-section { background: var(--s1); padding: 32px; border: 1px solid var(--gold); border-radius: var(--r); box-shadow: 0 6px 24px rgba(0,0,0,0.2); }
+.guide-section h2 { font-size: 22px; color: var(--gold); margin-bottom: 14px; text-transform: uppercase; }
+.guide-section .desc, .guide-section .params, .guide-section .example, .guide-section .reco { font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+.guide-section code { background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px; font-family: monospace; }
+.guide-preview { margin-top: 12px; text-align: center; }
+
+.guide-container {
+    padding: 40px 16px 80px;
+}
+
+.guide-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.guide-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.guide-section {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px;
+    padding: 24px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.guide-section h2 {
+    margin-top: 0;
+}
+
+.guide-section code {
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+.guide-preview iframe {
+    width: 100%;
+    max-height: 80vh;
+    border: none;
+    border-radius: 16px;
+    background: rgba(0,0,0,0.18);
+}
+
+@media (max-width: 600px) {
+    .guide-container { padding: 24px 12px 60px; }
+    .guide-section { padding: 18px; }
+    .guide-preview iframe { max-height: 60vh; }
+}
+
+.guide-table { margin-top: 48px; background: var(--s1); border-radius: var(--r); border: 1.5px solid var(--gold); box-shadow: 0 4px 18px rgba(212,146,10,0.25); padding: 32px; }
+.guide-table table { width: 100%; border-collapse: collapse; font-size: 14px; color: #fff; }
+.guide-table th, .guide-table td { padding: 8px; }
+.guide-table thead tr { background: var(--gold); color: #222; }
+.guide-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.03); }
+
+.guide-faq { margin-top: 32px; background: var(--s1); border-radius: var(--r); border: 1.5px solid var(--gold); box-shadow: 0 4px 18px rgba(212,146,10,0.25); padding: 32px; }
+.guide-faq ul { font-size: 15px; color: #fff; margin-left: 18px; }
+.guide-faq li { margin-bottom: 14px; }
+/* overlay styles */
+.overlay-view {
+    width: 100%;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.overlay-view .modal,
+.overlay-view .card {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
 .card::before {
     content: '';
     position: absolute;
@@ -436,7 +520,7 @@ h1 span {
 /* Vote Btn */
 .vote-wrap {
     text-align: center;
-    margin-bottom: 32px
+    margin-bottom: 0px
 }
 
 .vote-btn {
