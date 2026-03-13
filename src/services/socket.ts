@@ -1,5 +1,7 @@
 import { io } from 'socket.io-client';
 
+console.log('Socket initialization with:', import.meta.env.VITE_API_URL);
+
 const socket = io(import.meta.env.VITE_API_URL, {
   withCredentials: true,
   extraHeaders: {

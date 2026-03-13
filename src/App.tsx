@@ -96,12 +96,34 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    socket.on('connect', () => setConn(true));
-    socket.on('disconnect', () => setConn(false));
-    socket.on('estado', (res: ElectionData) => setData(res));
-    socket.on('actualizacion', (res: ElectionData) => setData(res));
+    socket.on('connect', () => {
+      console.log('Socket connected successfully');
+      setConn(true);
+    });
+    socket.on('connect_error', (msg) => {
+      console.error('Socket connection error:', msg);
+    });
+    socket.on('disconnect', () => {
+      console.warn('Socket disconnected');
+      setConn(false);
+    });
+    socket.on('estado', (res: ElectionData) => {
+      console.log('Received initial state:', res);
+      setData(res);
+    });
+    socket.on('actualizacion', (res: ElectionData) => {
+      console.log('Received update:', res);
+      setData(res);
+    });
     socket.on('presencia', (res: { online: number }) => setOnline(res.online));
-    return () => { socket.off('connect'); socket.off('disconnect'); socket.off('estado'); socket.off('actualizacion'); socket.off('presencia'); };
+    return () => { 
+      socket.off('connect'); 
+      socket.off('connect_error');
+      socket.off('disconnect'); 
+      socket.off('estado'); 
+      socket.off('actualizacion'); 
+      socket.off('presencia'); 
+    };
   }, []);
 
   useEffect(() => {
