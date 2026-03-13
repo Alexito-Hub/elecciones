@@ -1,9 +1,9 @@
 import { io } from 'socket.io-client';
 
-const socket = io(import.meta.env.VITE_API_URL || 'http://localhost:8080', {
+const socket = io(import.meta.env.VITE_API_URL, {
   withCredentials: true,
   extraHeaders: {
-     'x-app-token': import.meta.env.VITE_APP_TOKEN || 'AuralixToken2026'
+     'x-app-token': import.meta.env.VITE_APP_TOKEN
   }
 });
 
