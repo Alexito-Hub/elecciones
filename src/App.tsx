@@ -43,7 +43,7 @@ function OverlayPage() {
   }, []);
 
   useEffect(() => {
-    socket.on('connect', () => {});
+    socket.on('connect', () => { });
     socket.on('estado', (res: ElectionData) => setData(res));
     socket.on('actualizacion', (res: ElectionData) => setData(res));
     // keep presence/online hooks if needed in future
@@ -96,33 +96,18 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Socket connected successfully');
-      setConn(true);
-    });
-    socket.on('connect_error', (msg) => {
-      console.error('Socket connection error:', msg);
-    });
-    socket.on('disconnect', () => {
-      console.warn('Socket disconnected');
-      setConn(false);
-    });
-    socket.on('estado', (res: ElectionData) => {
-      console.log('Received initial state:', res);
-      setData(res);
-    });
-    socket.on('actualizacion', (res: ElectionData) => {
-      console.log('Received update:', res);
-      setData(res);
-    });
+    socket.on('connect', () => setConn(true));
+    socket.on('disconnect', () => setConn(false));
+    socket.on('estado', (res: ElectionData) => setData(res));
+    socket.on('actualizacion', (res: ElectionData) => setData(res));
     socket.on('presencia', (res: { online: number }) => setOnline(res.online));
-    return () => { 
-      socket.off('connect'); 
+    return () => {
+      socket.off('connect');
       socket.off('connect_error');
-      socket.off('disconnect'); 
-      socket.off('estado'); 
-      socket.off('actualizacion'); 
-      socket.off('presencia'); 
+      socket.off('disconnect');
+      socket.off('estado');
+      socket.off('actualizacion');
+      socket.off('presencia');
     };
   }, []);
 
@@ -135,10 +120,10 @@ export default function App() {
     const id = candId || selId;
     if (!id || v || vd) return;
     if (name === '') {
-        const val = window.prompt("Ingresa tu nombre para registrar el voto:");
-        if (!val) return;
-        setName(val);
-        // We'll call vote again recursively with the name set, or just proceed
+      const val = window.prompt("Ingresa tu nombre para registrar el voto:");
+      if (!val) return;
+      setName(val);
+      // We'll call vote again recursively with the name set, or just proceed
     }
     setV(true);
     try {
@@ -180,14 +165,14 @@ export default function App() {
           <Route path="/" element={<Home data={data} vd={vd} v={v} selId={selId} setSelId={setSelId} votoCand={votoCand} detail={detail} vote={vote} />} />
           <Route path="/resultados" element={<Results data={data} conn={conn} />} />
         </Route>
-        
+
         <Route path="/overlay/guia" element={<OverlayGuide data={data} countdown={countdown} vts={vts} />} />
         <Route path="/error" element={<ErrorPage />} />
-        
+
         <Route path="*" element={
-          window.location.search.includes('overlay=') ? 
-          <OverlayView data={data} countdown={countdown} vts={vts} /> : 
-          <Navigate to="/error" />
+          window.location.search.includes('overlay=') ?
+            <OverlayView data={data} countdown={countdown} vts={vts} /> :
+            <Navigate to="/error" />
         } />
       </Routes>
       <CandidateModal modal={modal} setModal={setModal} mLoad={mLoad} vd={vd} v={v} vote={vote} copy={copy} />
