@@ -9,6 +9,7 @@ RUN npm ci
 
 # Copy sources
 COPY . ./
+COPY .env .env
 
 # Build the app
 RUN npm run build
