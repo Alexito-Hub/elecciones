@@ -290,7 +290,6 @@ function TopOverlay({ resSorted, ep, vts }: { resSorted: CandidatoLive[]; ep: UR
                   display: 'flex', alignItems: 'center', gap: '12px',
                   padding: '9px 12px', borderRadius: '12px',
                   background: i === 0 ? 'rgba(212,175,55,0.1)' : 'rgba(255,255,255,0.03)',
-                  border: i === 0 ? '1px solid rgba(212,175,55,0.2)' : '1px solid transparent',
                   position: 'relative', overflow: 'hidden',
                 }}
               >
@@ -470,7 +469,7 @@ function TickerOverlay({ resSorted, data, ep }: { resSorted: CandidatoLive[]; da
   }, [speed, totalW]);
 
   return (
-    <div style={{ width: '100%', height: h, background: `#${bg}ee`, backdropFilter: 'blur(12px)', borderTop: `2px solid #${accent}`, display: 'flex', alignItems: 'center', overflow: 'hidden', fontFamily: 'var(--fb)', position: 'relative' }}>
+    <div style={{ width: '100%', height: h, background: `#${bg}ee`, backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', overflow: 'hidden', fontFamily: 'var(--fb)', position: 'relative' }}>
       <div style={{ flexShrink: 0, height: '100%', background: `#${accent}`, display: 'flex', alignItems: 'center', padding: '0 16px', gap: '7px', zIndex: 2 }}>
         <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ repeat: Infinity, duration: 1.2 }}
           style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#000', display: 'inline-block' }} />
@@ -504,7 +503,7 @@ function LowerThirdOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: 
         <div style={{ background: c.color, padding: '7px 18px 5px' }}>
           <div style={{ fontSize: '14px', fontWeight: 800, color: '#000' }}>{customName}</div>
         </div>
-        <div style={{ background: 'rgba(10,10,20,0.92)', padding: '4px 18px 6px', borderBottom: `2px solid ${c.color}` }}>
+        <div style={{ background: 'rgba(10,10,20,0.92)', padding: '4px 18px 6px' }}>
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.65)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
             {customSub}{showPct ? `  ·  ${c.porcentaje}%` : ''}
           </div>
@@ -531,7 +530,7 @@ function LowerThirdOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: 
   return (
     <motion.div initial={{ x: -40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       style={{ display: 'inline-flex', fontFamily: 'var(--fb)' }}>
-      <div style={{ background: 'rgba(10,10,20,0.88)', backdropFilter: 'blur(20px)', padding: '10px 20px', borderLeft: `4px solid ${c.color}`, display: 'flex', alignItems: 'center', gap: '14px' }}>
+      <div style={{ background: 'rgba(10,10,20,0.88)', backdropFilter: 'blur(20px)', padding: '10px 20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
         {ep.get('img') !== '0' && (
           <Avatar c={c} size={38} />
         )}
