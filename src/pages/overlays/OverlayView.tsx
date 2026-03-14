@@ -11,11 +11,9 @@ interface OverlayViewProps {
   demo?: { mode: string; params?: Record<string, string> };
 }
 
-// Candidato extended with runtime election fields
 type CandidatoLive = Candidato & { votos: number; porcentaje: number };
 
-/* ─── helpers ────────────────────────────────────────────────── */
-
+{/* helpers */ }
 function useEP(demo?: OverlayViewProps['demo']): URLSearchParams {
   const url = new URLSearchParams(window.location.search);
   return demo
@@ -32,8 +30,7 @@ function flag(p: URLSearchParams, key: string, def: boolean): boolean {
   return p.has(key) ? p.get(key) !== '0' : def;
 }
 
-/* ─── shared primitives ──────────────────────────────────────── */
-
+{/* shared primitives */ }
 function GlassCard({
   children,
   accentColor,
@@ -100,10 +97,11 @@ function ColorStripe({ color }: { color: string }) {
  * useParty=false → foto circular del candidato (fallback: initials)
  * useParty=true  → logo cuadrado del partido  (fallback: nombre del partido)
  */
-function Avatar({ c, size = 72, useParty = false }: { c: CandidatoLive; size?: number; useParty?: boolean }) {
+function Avatar({ c, size = 72, useParty = false, style }: { c: CandidatoLive; size?: number; useParty?: boolean; style?: React.CSSProperties }) {
   const src = useParty ? c.logo : c.image;
   const label = useParty ? c.partido : c.initials;
-  const radius = useParty ? '10px' : '50%';
+  const radius = useParty ? '8px' : '50%';
+  const objectFit = useParty ? 'contain' : 'cover';
 
   return (
     <div style={{
@@ -113,16 +111,17 @@ function Avatar({ c, size = 72, useParty = false }: { c: CandidatoLive; size?: n
       background: `${c.color}18`,
       flexShrink: 0,
       boxShadow: `0 0 0 4px ${c.color}12`,
+      ...style
     }}>
       {src
-        ? <img src={src} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+        ? <img src={src} loading="lazy" style={{ width: '100%', height: '100%', objectFit }} />
         : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: c.color, fontSize: size * 0.28, fontFamily: 'var(--fd)', textAlign: 'center', padding: '4px' }}>{label}</div>
       }
     </div>
   );
 }
 
-/* ─── shared encuestas block ─────────────────────────────────── */
+/* shared encuestas block */
 function EncuestasBlock({ c }: { c: CandidatoLive }) {
   return (
     <div style={{ marginTop: '14px', display: 'flex', gap: '12px' }}>
@@ -139,7 +138,7 @@ function EncuestasBlock({ c }: { c: CandidatoLive }) {
   );
 }
 
-/* ─── shared rank + ideo badges ─────────────────────────────── */
+/* shared rank + ideo badges */
 function MetaBadges({ c, rank, showRank, showIdeo }: { c: CandidatoLive; rank: number; showRank: boolean; showIdeo: boolean }) {
   if (!showRank && !showIdeo) return null;
   return (
@@ -150,7 +149,7 @@ function MetaBadges({ c, rank, showRank, showIdeo }: { c: CandidatoLive; rank: n
   );
 }
 
-/* ─── shared pct + votos column ─────────────────────────────── */
+/* shared pct + votos column */
 function PctColumn({ c }: { c: CandidatoLive }) {
   return (
     <div style={{ textAlign: 'right', flexShrink: 0 }}>
@@ -161,10 +160,7 @@ function PctColumn({ c }: { c: CandidatoLive }) {
   );
 }
 
-/* ══════════════════════════════════════════════════════════════
-   OVERLAY: candidate
-   Foto circular · Nombre principal · Partido secundario
-══════════════════════════════════════════════════════════════ */
+/* OVERLAY: candidate */
 function CandidateOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSearchParams }) {
   const id = ep.get('id') ?? '';
   const c = resSorted.find(x => x.id === id);
@@ -218,19 +214,15 @@ function CandidateOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: U
   );
 }
 
-/* ══════════════════════════════════════════════════════════════
-   OVERLAY: party
-   Logo cuadrado del partido · Partido principal · Candidato secundario
-   El porcentaje corresponde al candidato (mismo dato, diferente presentación)
-══════════════════════════════════════════════════════════════ */
+/* OVERLAY: party */
 function PartyOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSearchParams }) {
   const id = ep.get('id') ?? '';
   const c = resSorted.find(x => x.id === id);
   if (!c) return <div style={{ color: 'white', fontFamily: 'var(--fb)', padding: '16px' }}>Candidato no encontrado</div>;
 
   const rank = resSorted.findIndex(x => x.id === id) + 1;
-  const showLogo = flag(ep, 'img', true);   // logo del partido
-  const showCand = flag(ep, 'cand', true);   // nombre del candidato (subtítulo)
+  const showLogo = flag(ep, 'img', true);
+  const showCand = flag(ep, 'cand', true);
   const showBar = flag(ep, 'v', false);
   const showEnc = flag(ep, 'e', false);
   const showRank = flag(ep, 'r', false);
@@ -247,7 +239,7 @@ function PartyOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSe
         <div style={{ padding: '20px 24px 18px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              {/* Logo del partido (cuadrado redondeado en vez de círculo) */}
+              {/* Logo del partido */}
               {showLogo && <Avatar c={c} size={72} useParty={true} />}
               <div>
                 {/* Partido es el título principal */}
@@ -257,7 +249,7 @@ function PartyOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSe
                 <MetaBadges c={c} rank={rank} showRank={showRank} showIdeo={showIdeo} />
               </div>
             </div>
-            {/* Porcentaje — igual que en candidate, pertenece al candidato */}
+            {/* Porcentaje */}
             <PctColumn c={c} />
           </div>
           {showBar && <div style={{ marginTop: '14px' }}><LiveBar pct={c.porcentaje} color={c.color} /></div>}
@@ -268,13 +260,12 @@ function PartyOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSe
   );
 }
 
-/* ══════════════════════════════════════════════════════════════
-   OVERLAY: top
-══════════════════════════════════════════════════════════════ */
+/* OVERLAY: top */
 function TopOverlay({ resSorted, ep, vts }: { resSorted: CandidatoLive[]; ep: URLSearchParams; vts: (n: number) => string }) {
   const count = Math.min(parseInt(ep.get('n') ?? '5'), 10);
   const topN = resSorted.slice(0, count);
   const maxVoto = topN[0]?.votos ?? 1;
+  const showParty = flag(ep, 'party', false);
 
   return (
     <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
@@ -285,7 +276,7 @@ function TopOverlay({ resSorted, ep, vts }: { resSorted: CandidatoLive[]; ep: UR
               <div style={{ background: 'linear-gradient(135deg,#D4920A,#f5c842)', padding: '6px', borderRadius: '9px' }}>
                 <Trophy size={16} color="#000" />
               </div>
-              <span style={{ fontFamily: 'var(--fd)', fontSize: '20px', letterSpacing: '0.04em' }}>TOP {count}</span>
+              <span style={{ fontFamily: 'var(--fd)', fontSize: '20px', letterSpacing: '0.04em' }}>TOP {count} {showParty ? 'PARTIDOS' : 'CANDIDATOS'}</span>
             </div>
             <LiveDot />
           </div>
@@ -306,15 +297,16 @@ function TopOverlay({ resSorted, ep, vts }: { resSorted: CandidatoLive[]; ep: UR
               >
                 <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${(c.votos / maxVoto) * 100}%`, background: `${c.color}08`, borderRadius: '12px' }} />
                 <span style={{ fontFamily: 'var(--fd)', fontSize: '18px', width: '22px', textAlign: 'center', color: i === 0 ? 'var(--gold)' : 'rgba(255,255,255,0.3)', flexShrink: 0, zIndex: 1 }}>{i + 1}</span>
-                <div style={{ width: '36px', height: '36px', borderRadius: '50%', border: `2px solid ${c.color}55`, overflow: 'hidden', background: `${c.color}12`, flexShrink: 0, zIndex: 1 }}>
-                  {c.image
-                    ? <img src={c.image} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: c.color }}>{c.initials}</div>
-                  }
+                <div style={{ zIndex: 1 }}>
+                  <Avatar c={c} size={36} useParty={showParty} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0, zIndex: 1 }}>
-                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.nombre}</div>
-                  <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{c.partido}</div>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {showParty ? c.partido : c.nombre}
+                  </div>
+                  <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                    {showParty ? c.nombre : c.partido}
+                  </div>
                 </div>
                 <div style={{ textAlign: 'right', zIndex: 1 }}>
                   <div style={{ fontFamily: 'var(--fd)', fontSize: '20px', color: c.color }}>{c.porcentaje}%</div>
@@ -329,9 +321,7 @@ function TopOverlay({ resSorted, ep, vts }: { resSorted: CandidatoLive[]; ep: UR
   );
 }
 
-/* ══════════════════════════════════════════════════════════════
-   OVERLAY: summary / totals
-══════════════════════════════════════════════════════════════ */
+/* OVERLAY: summary / totals */
 function SummaryOverlay({
   data, resSorted, countdown, ep, mode,
 }: {
@@ -345,6 +335,11 @@ function SummaryOverlay({
   const showLeader = flag(ep, 'leader', mode === 'summary');
   const showCountdown = flag(ep, 'countdown', mode === 'summary');
   const showStats = flag(ep, 'stats', mode === 'totals');
+  const showDate = flag(ep, 'date', false);
+  const showEnc = flag(ep, 'e', false);
+  const showUrl = flag(ep, 'url', false);
+  const showParty = flag(ep, 'party', false);
+
   const small = ep.get('size') === 'small';
   const fsNum = small ? 38 : 56;
   const pad = small ? 18 : 26;
@@ -355,6 +350,11 @@ function SummaryOverlay({
         <div style={{ padding: pad }}>
           {showCountdown && (
             <div style={{ marginBottom: showLeader || showStats ? '26px' : 0 }}>
+              {showDate && (
+                <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.15em', marginBottom: '8px', fontWeight: 600 }}>
+                  DOMINGO 12 DE ABRIL, 2026
+                </div>
+              )}
               <div style={{ fontSize: '10px', color: 'var(--gold)', letterSpacing: '0.28em', textTransform: 'uppercase', marginBottom: '12px', fontWeight: 700 }}>TIEMPO PARA EL CIERRE</div>
               <div style={{ fontFamily: 'var(--fd)', fontSize: fsNum, display: 'flex', justifyContent: 'center', gap: '16px' }}>
                 {[
@@ -372,18 +372,17 @@ function SummaryOverlay({
             </div>
           )}
           {showLeader && top && (
-            <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', padding: '14px', marginBottom: showStats ? '14px' : 0 }}>
-              <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.18em', marginBottom: '10px' }}>CANDIDATO LÍDER EN VIVO</div>
+            <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', padding: '14px', marginBottom: showStats || showUrl ? '14px' : 0 }}>
+              <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.18em', marginBottom: '10px' }}>{showParty ? 'PARTIDO LÍDER EN VIVO' : 'CANDIDATO LÍDER EN VIVO'}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', textAlign: 'left' }}>
-                <div style={{ width: '50px', height: '50px', borderRadius: '50%', border: `2px solid ${top.color}55`, overflow: 'hidden', flexShrink: 0 }}>
-                  {top.image ? <img src={top.image} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>{top.initials}</div>}
-                </div>
+                <Avatar c={top} size={50} useParty={showParty} />
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '17px', fontWeight: 800, color: '#fff' }}>{top.nombre}</div>
-                  <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.38)', textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '2px' }}>{top.partido}</div>
+                  <div style={{ fontSize: '17px', fontWeight: 800, color: '#fff' }}>{showParty ? top.partido : top.nombre}</div>
+                  <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.38)', textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '2px' }}>{showParty ? top.nombre : top.partido}</div>
                 </div>
                 <div style={{ fontFamily: 'var(--fd)', fontSize: '34px', color: top.color }}>{top.porcentaje}%</div>
               </div>
+              {showEnc && <EncuestasBlock c={top} />}
             </div>
           )}
           {showStats && (
@@ -399,15 +398,20 @@ function SummaryOverlay({
               ))}
             </div>
           )}
+          {showUrl && (
+            <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+              <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em' }}>VOTA EN: </span>
+              <span style={{ fontSize: '14px', color: 'var(--gold)', fontWeight: 700, letterSpacing: '0.05em' }}>vote.auralixpe.xyz</span>
+            </div>
+          )}
         </div>
       </GlassCard>
     </motion.div>
   );
 }
 
-/* ══════════════════════════════════════════════════════════════
-   OVERLAY: ticker
-══════════════════════════════════════════════════════════════ */
+
+/* OVERLAY: ticker */
 function TickerOverlay({ resSorted, data, ep }: { resSorted: CandidatoLive[]; data: ElectionData; ep: URLSearchParams }) {
   const [pos, setPos] = useState(0);
   const speed = parseInt(ep.get('speed') ?? '60');
@@ -458,9 +462,7 @@ function TickerOverlay({ resSorted, data, ep }: { resSorted: CandidatoLive[]; da
   );
 }
 
-/* ══════════════════════════════════════════════════════════════
-   OVERLAY: lower-third
-══════════════════════════════════════════════════════════════ */
+/* OVERLAY: lower-third */
 function LowerThirdOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSearchParams }) {
   const id = ep.get('id') ?? '';
   const c = resSorted.find(x => x.id === id) ?? resSorted[0];
@@ -491,9 +493,7 @@ function LowerThirdOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: 
     return (
       <motion.div initial={{ y: 20, opacity: 0, scale: 0.95 }} animate={{ y: 0, opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'rgba(10,10,20,0.85)', backdropFilter: 'blur(20px)', borderRadius: '99px', padding: '7px 18px 7px 7px', border: `1px solid ${c.color}44`, fontFamily: 'var(--fb)' }}>
-        <div style={{ width: '34px', height: '34px', borderRadius: '50%', border: `2px solid ${c.color}`, overflow: 'hidden', background: `${c.color}18` }}>
-          {c.image ? <img src={c.image} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: c.color }}>{c.initials}</div>}
-        </div>
+        <Avatar c={c} size={34} />
         <div>
           <div style={{ fontSize: '13px', fontWeight: 700, color: '#fff' }}>{customName}</div>
           <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.08em' }}>{customSub}</div>
@@ -509,9 +509,7 @@ function LowerThirdOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: 
       style={{ display: 'inline-flex', fontFamily: 'var(--fb)' }}>
       <div style={{ background: 'rgba(10,10,20,0.88)', backdropFilter: 'blur(20px)', padding: '10px 20px', borderLeft: `4px solid ${c.color}`, display: 'flex', alignItems: 'center', gap: '14px' }}>
         {ep.get('img') !== '0' && (
-          <div style={{ width: '38px', height: '38px', borderRadius: '50%', border: `1.5px solid ${c.color}66`, overflow: 'hidden', flexShrink: 0 }}>
-            {c.image ? <img src={c.image} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', color: c.color }}>{c.initials}</div>}
-          </div>
+          <Avatar c={c} size={38} />
         )}
         <div>
           <div style={{ fontSize: '15px', fontWeight: 800, color: '#fff', letterSpacing: '-0.01em' }}>{customName}</div>
@@ -524,9 +522,7 @@ function LowerThirdOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: 
   );
 }
 
-/* ══════════════════════════════════════════════════════════════
-   OVERLAY: alert
-══════════════════════════════════════════════════════════════ */
+/* OVERLAY: alert */
 function AlertOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSearchParams }) {
   const id = ep.get('id') ?? '';
   const c = resSorted.find(x => x.id === id) ?? resSorted[0];
@@ -576,9 +572,7 @@ function AlertOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSe
               </div>
               {c && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: `2px solid ${c.color}66`, overflow: 'hidden' }}>
-                    {c.image ? <img src={c.image} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', color: c.color }}>{c.initials}</div>}
-                  </div>
+                  <Avatar c={c} size={40} />
                   <div style={{ fontFamily: 'var(--fd)', fontSize: '28px', color: c.color }}>{c.porcentaje}%</div>
                 </div>
               )}
@@ -590,9 +584,7 @@ function AlertOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSe
   );
 }
 
-/* ══════════════════════════════════════════════════════════════
-   OVERLAY: bars
-══════════════════════════════════════════════════════════════ */
+/* OVERLAY: bars */
 function BarsOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSearchParams }) {
   const count = Math.min(parseInt(ep.get('n') ?? '5'), 8);
   const topN = resSorted.slice(0, count);
@@ -615,11 +607,10 @@ function BarsOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSea
               {topN.map((c, i) => (
                 <motion.div key={c.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.07 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '9px', marginBottom: '3px' }}>
-                    {c.image
-                      ? <img src={c.image} loading="lazy" style={{ width: '20px', height: '20px', borderRadius: '50%', objectFit: 'cover', border: `1px solid ${c.color}44`, flexShrink: 0 }} />
-                      : <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: `${c.color}20`, border: `1px solid ${c.color}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '7px', color: c.color, flexShrink: 0 }}>{c.initials}</div>
-                    }
-                    <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.nombre}</span>
+                    <Avatar c={c} size={20} useParty={ep.get('party') === '1'} style={{ border: `1px solid ${c.color}44`, boxShadow: 'none' }} />
+                    <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {ep.get('party') === '1' ? c.partido : c.nombre}
+                    </span>
                     <span style={{ fontFamily: 'var(--fd)', fontSize: '13px', color: c.color, minWidth: '36px', textAlign: 'right' }}>{c.porcentaje}%</span>
                   </div>
                   <div style={{ height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '99px', overflow: 'hidden' }}>
@@ -657,9 +648,7 @@ function BarsOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSea
   );
 }
 
-/* ══════════════════════════════════════════════════════════════
-   ROOT
-══════════════════════════════════════════════════════════════ */
+{/* root */ }
 export default function OverlayView({ data, countdown, vts, demo }: OverlayViewProps) {
   const ep = useEP(demo);
   const overlayMode = demo ? demo.mode : ep.get('overlay');
@@ -702,34 +691,3 @@ export default function OverlayView({ data, countdown, vts, demo }: OverlayViewP
     default: return null;
   }
 }
-
-/*
-═══════════════════════════════════════════════════════════════
-  PARÁMETROS URL — REFERENCIA RÁPIDA
-═══════════════════════════════════════════════════════════════
-
-  ?overlay=candidate&id=XXX    foto candidato · nombre · partido
-    img=0  party=0  v=1  e=1  p=1  r=1  ideo=1
-
-  ?overlay=party&id=XXX        logo partido · partido · candidato
-    img=0  cand=0  v=1  e=1  r=1  ideo=1
-    (porcentaje siempre visible; corresponde al candidato)
-
-  ?overlay=top&n=5
-  ?overlay=summary
-  ?overlay=totals
-
-  ?overlay=ticker
-    speed=60  h=52  bg=0a0a14  accent=D4920A
-
-  ?overlay=lower-third&id=XXX
-    style=line|block|pill  name=  sub=  pct=0  img=0
-
-  ?overlay=alert&id=XXX
-    type=winner|update|info  title=  body=
-
-  ?overlay=bars&n=5
-    dir=v  (default: horizontal)
-
-  Dimensiones (todos):  w=800  h=400
-*/
