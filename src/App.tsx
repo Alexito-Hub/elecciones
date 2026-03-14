@@ -14,6 +14,7 @@ import ErrorPage from './pages/ErrorPage';
 // Components
 import Layout from './components/common/Layout';
 import CandidateModal from './components/features/CandidateModal';
+import NameModal from './components/features/NameModal';
 import Toast from './components/common/Toast';
 
 const getFingerprint = async () => {
@@ -70,6 +71,8 @@ export default function App() {
   const [data, setData] = useState<ElectionData | null>(null);
   const [online, setOnline] = useState(1);
   const [name, setName] = useState('');
+  const [showNameModal, setShowNameModal] = useState(false);
+  const [pendingVoteId, setPendingVoteId] = useState<string | null>(null);
   const [selId, setSelId] = useState<string | null>(null);
   const [v, setV] = useState(false);
   const [vd, setVd] = useState(false);
@@ -119,27 +122,58 @@ export default function App() {
   useEffect(() => {
     const saved = localStorage.getItem('voto_registrado_2026');
     if (saved) { setVd(true); setVotoCand(localStorage.getItem('voto_candidato_id')); }
+    const savedName = localStorage.getItem('voto_nombre');
+    if (savedName) setName(savedName);
   }, []);
 
-  const vote = async (candId?: string) => {
+  const vote = async (candId?: string, overrideName?: string) => {
     const id = candId || selId;
     if (!id || v || vd) return;
-    if (name === '') {
-      const val = window.prompt("Ingresa tu nombre para registrar el voto:");
-      if (!val) return;
-      setName(val);
-      // We'll call vote again recursively with the name set, or just proceed
+
+    const currentName = overrideName || name;
+
+    if (currentName === '') {
+      setPendingVoteId(id);
+      setShowNameModal(true);
+      return;
     }
+
     setV(true);
     try {
       const fingerprint = await getFingerprint();
       const token = await api.get('/api/token').then(r => r.data.token);
-      const res = await api.post('/api/votar', { token, candidato_id: id, fingerprint_cliente: fingerprint, nombre: name || 'Anonimo' });
+      const res = await api.post('/api/votar', { 
+        token, 
+        candidato_id: id, 
+        fingerprint_cliente: fingerprint, 
+        nombre: currentName
+      });
+      
       if (res.data.status) {
-        setVd(true); setVotoCand(id); setMsg('Voto registrado!'); setModal(null);
-        localStorage.setItem('voto_registrado_2026', 'true'); localStorage.setItem('voto_candidato_id', id);
-      } else { setErr(res.data.msg); }
-    } catch (e: any) { setErr('Error de conexión'); } finally { setV(false); }
+        setVd(true); 
+        setVotoCand(id); 
+        setMsg('¡Voto registrado con éxito!'); 
+        setModal(null);
+        localStorage.setItem('voto_registrado_2026', 'true'); 
+        localStorage.setItem('voto_candidato_id', id);
+        localStorage.setItem('voto_nombre', currentName);
+      } else { 
+        setErr(res.data.msg); 
+      }
+    } catch (e: any) { 
+      setErr('Error de conexión'); 
+    } finally { 
+      setV(false); 
+    }
+  };
+
+  const handleNameSubmit = (newName: string) => {
+    setName(newName);
+    setShowNameModal(false);
+    if (pendingVoteId) {
+      vote(pendingVoteId, newName);
+      setPendingVoteId(null);
+    }
   };
 
   const detail = async (c: ElectionCandidate) => {
@@ -181,6 +215,7 @@ export default function App() {
         } />
       </Routes>
       <CandidateModal modal={modal} setModal={setModal} mLoad={mLoad} vd={vd} v={v} vote={vote} copy={copy} />
+      <NameModal show={showNameModal} onClose={() => setShowNameModal(false)} onSubmit={handleNameSubmit} />
       <Toast err={err} msg={msg} />
     </BrowserRouter>
   );
