@@ -58,34 +58,49 @@ export default function OverlayView({ data, countdown, vts, demo }: OverlayViewP
     const showR = effectiveParams.has('r') ? effectiveParams.get('r') !== '0' : false;
 
     return (
-      <div className="overlay-view" style={{ background: 'transparent', padding: '20px', width: overlayWidth ?? '100%', height: overlayHeight ?? 'auto', boxSizing: 'border-box', fontFamily: 'var(--fb)' }}>
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="modal" style={{ border: `1px solid ${c.color}40`, background: 'rgba(13, 13, 24, 0.85)', backdropFilter: 'blur(20px)', transform: 'none', maxHeight: 'none', boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 20px ${c.color}22` }}>
+      <div className="overlay-view" style={{ background: 'transparent', padding: '40px', width: overlayWidth ?? '100%', height: overlayHeight ?? 'auto', boxSizing: 'border-box', fontFamily: 'var(--fb)' }}>
+        <motion.div 
+          initial={{ opacity: 0, x: -50, filter: 'blur(10px)' }} 
+          animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }} 
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="modal" 
+          style={{ 
+            border: `1px solid rgba(255,255,255,0.1)`,
+            borderTop: `1px solid rgba(255,255,255,0.25)`,
+            background: 'rgba(13, 13, 24, 0.7)', 
+            backdropFilter: 'blur(30px)', 
+            transform: 'none', 
+            maxHeight: 'none', 
+            boxShadow: `0 30px 60px rgba(0,0,0,0.5), 0 0 40px ${c.color}15`,
+            borderRadius: '24px'
+          }}
+        >
           <div className="mhero" style={{ '--mc': c.color } as any}>
-            <div className="mhero-in" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '18px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div className="mhero-in" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                 {showImage && (
-                  <div className="mav" style={{ backgroundColor: c.color + '22', color: c.color, borderColor: c.color + '40', overflow: 'hidden', borderRadius: '50%' }}>
+                  <div className="mav" style={{ width: '80px', height: '80px', backgroundColor: c.color + '22', color: c.color, borderColor: c.color + '40', overflow: 'hidden', borderRadius: '50%', boxShadow: `0 0 20px ${c.color}33` }}>
                     {c.image ? <img src={c.image} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : c.initials}
                   </div>
                 )}
                 <div style={{ flex: 1 }}>
-                  <div className="mname">{c.nombre}</div>
+                  <div className="mname" style={{ fontSize: '32px', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{c.nombre}</div>
                   {showParty && (
-                    <div className="mparty">
+                    <div className="mparty" style={{ fontSize: '12px', letterSpacing: '0.15em', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
                       {c.partido}
-                      {showPartyLogo && c.logo && <span className="logo-pill" style={{ height: '16px', padding: '0 5px', marginLeft: '6px', verticalAlign: 'middle' }}><img src={c.logo} loading="lazy" /></span>}
+                      {showPartyLogo && c.logo && <span className="logo-pill" style={{ height: '20px', padding: '0 8px', marginLeft: '10px', verticalAlign: 'middle' }}><img src={c.logo} loading="lazy" /></span>}
                     </div>
                   )}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-                    {showIdeo && <span className="mideo" style={{ color: c.color }}>{c.ideo}</span>}
-                    {showR && <span style={{ fontFamily: 'var(--fd)', fontSize: '16px', opacity: 0.4 }}>PUESTO #{rank}</span>}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '8px' }}>
+                    {showIdeo && <span className="mideo" style={{ color: c.color, background: `${c.color}22`, border: `1px solid ${c.color}44` }}>{c.ideo}</span>}
+                    {showR && <span style={{ fontFamily: 'var(--fd)', fontSize: '18px', opacity: 0.6, color: 'var(--gold)' }}>PUESTO #{rank}</span>}
                   </div>
                 </div>
               </div>
 
-              <div style={{ textAlign: 'right', minWidth: '120px' }}>
-                <div style={{ fontFamily: 'var(--fd)', fontSize: '30px', color: c.color, lineHeight: 1 }}>{c.porcentaje}%</div>
-                <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '4px' }}>{c.votos.toLocaleString()} / {data?.total?.toLocaleString() ?? '...'} votos</div>
+              <div style={{ textAlign: 'right', minWidth: '140px' }}>
+                <div style={{ fontFamily: 'var(--fd)', fontSize: '48px', color: c.color, lineHeight: 0.9, textShadow: `0 0 20px ${c.color}44` }}>{c.porcentaje}%</div>
+                <div style={{ fontSize: '13px', color: 'var(--soft)', marginTop: '8px' }}>{c.votos.toLocaleString()} <span style={{ opacity: 0.6 }}>votos</span></div>
               </div>
             </div>
           </div>
@@ -104,7 +119,7 @@ export default function OverlayView({ data, countdown, vts, demo }: OverlayViewP
                 <>
                   <div className="sec">Principales propuestas</div>
                   <div className="props" style={{ marginBottom: '20px' }}>
-                    {c.props.map((p, i) => (
+                    {c.props?.map((p, i) => (
                       <div key={i} className="prop">
                         <div className="pdot" style={{ backgroundColor: c.color }}></div>
                         <span>{p}</span>
@@ -142,28 +157,51 @@ export default function OverlayView({ data, countdown, vts, demo }: OverlayViewP
     const topN = resSorted.slice(0, count);
 
     return (
-      <div className="overlay-view" style={{ background: 'transparent', padding: '20px', width: overlayWidth ?? '100%', height: overlayHeight ?? 'auto', boxSizing: 'border-box', fontFamily: 'var(--fb)' }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card" style={{ background: 'rgba(13, 13, 24, 0.85)', backdropFilter: 'blur(20px)', width: '100%', padding: '20px', border: '1px solid var(--bord2)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px', borderBottom: '1px solid var(--bord)', paddingBottom: '12px' }}>
-            <Trophy size={20} color="var(--gold)" />
-            <div style={{ fontFamily: 'var(--fd)', fontSize: '24px', letterSpacing: '0.05em' }}>TOP {count} — RESULTADOS EN VIVO</div>
+      <div className="overlay-view" style={{ background: 'transparent', padding: '40px', width: overlayWidth ?? '100%', height: overlayHeight ?? 'auto', boxSizing: 'border-box', fontFamily: 'var(--fb)' }}>
+        <motion.div 
+          initial={{ opacity: 0, y: 40, scale: 0.98 }} 
+          animate={{ opacity: 1, y: 0, scale: 1 }} 
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="card" 
+          style={{ 
+            background: 'rgba(13, 13, 24, 0.7)', 
+            backdropFilter: 'blur(30px)', 
+            width: '100%', 
+            padding: '30px', 
+            border: '1px solid rgba(255,255,255,0.1)', 
+            borderTop: '1px solid rgba(255,255,255,0.2)',
+            boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
+            borderRadius: '24px'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '24px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '16px' }}>
+            <div style={{ background: 'var(--gold)', padding: '8px', borderRadius: '10px' }}>
+              <Trophy size={24} color="#000" />
+            </div>
+            <div style={{ fontFamily: 'var(--fd)', fontSize: '32px', letterSpacing: '0.05em', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>TOP {count} — RESULTADOS EN VIVO</div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {topN.map((c, i) => (
-              <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontFamily: 'var(--fd)', fontSize: '18px', width: '20px', color: 'var(--muted)' }}>{i + 1}</span>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: `1.5px solid ${c.color}`, overflow: 'hidden', background: '#141422', flexShrink: 0 }}>
-                  {c.image ? <img src={c.image} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} /> : <div style={{ fontSize: '10px', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{c.initials}</div>}
+              <motion.div 
+                key={c.id} 
+                initial={{ opacity: 0, x: -20 }} 
+                animate={{ opacity: 1, x: 0 }} 
+                transition={{ delay: i * 0.1 }}
+                style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '12px', borderRadius: '16px', background: i === 0 ? 'rgba(212, 146, 10, 0.1)' : 'rgba(255,255,255,0.03)' }}
+              >
+                <span style={{ fontFamily: 'var(--fd)', fontSize: '24px', width: '28px', color: i === 0 ? 'var(--gold)' : 'var(--muted)', textAlign: 'center' }}>{i + 1}</span>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', border: `2px solid ${c.color}`, overflow: 'hidden', background: '#141422', flexShrink: 0, boxShadow: `0 0 15px ${c.color}22` }}>
+                  {c.image ? <img src={c.image} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} /> : <div style={{ fontSize: '14px', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{c.initials}</div>}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: '#fff', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.nombre.split(' ')[0]} {c.nombre.split(' ').slice(-1)}</div>
-                  <div style={{ fontSize: '9px', color: 'var(--muted)', textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.partido}</div>
+                  <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff', lineHeight: 1.2, textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}>{c.nombre}</div>
+                  <div style={{ fontSize: '11px', color: 'var(--soft)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{c.partido}</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontFamily: 'var(--fd)', fontSize: '18px', color: c.color }}>{c.porcentaje}%</div>
-                  <div style={{ fontSize: '9px', color: 'var(--muted)' }}>{c.votos.toLocaleString()} {vts(c.votos)}</div>
+                  <div style={{ fontFamily: 'var(--fd)', fontSize: '26px', color: c.color, textShadow: `0 0 10px ${c.color}33` }}>{c.porcentaje}%</div>
+                  <div style={{ fontSize: '10px', color: 'var(--muted)' }}>{c.votos.toLocaleString()} {vts(c.votos)}</div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>
@@ -171,53 +209,75 @@ export default function OverlayView({ data, countdown, vts, demo }: OverlayViewP
     );
   }
 
-  if (overlayMode === 'summary') {
+  if (overlayMode === 'summary' || overlayMode === 'totals') {
     const webTop = resSorted[0];
-    const showLeader = effectiveParams.has('leader') ? effectiveParams.get('leader') !== '0' : true;
-    const showCountdown = effectiveParams.has('countdown') ? effectiveParams.get('countdown') !== '0' : true;
-    const showStats = effectiveParams.has('stats') ? effectiveParams.get('stats') !== '0' : false;
+    const showLeader = effectiveParams.has('leader') ? effectiveParams.get('leader') !== '0' : (overlayMode === 'summary');
+    const showCountdown = effectiveParams.has('countdown') ? effectiveParams.get('countdown') !== '0' : (overlayMode === 'summary');
+    const showStats = effectiveParams.has('stats') ? effectiveParams.get('stats') !== '0' : (overlayMode === 'totals');
     const size = effectiveParams.get('size') === 'small' ? 'small' : 'large';
 
-    const padding = size === 'small' ? 16 : 24;
-    const fontSize = size === 'small' ? 28 : 36;
+    const padding = size === 'small' ? 24 : 40;
+    const fontSize = size === 'small' ? 36 : 64;
 
     return (
-      <div className="overlay-view" style={{ background: 'transparent', padding: '20px', width: overlayWidth ?? '100%', height: overlayHeight ?? 'auto', fontFamily: 'var(--fb)' }}>
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="card" style={{ background: 'rgba(13, 13, 24, 0.85)', backdropFilter: 'blur(20px)', width: '100%', padding, border: '1px solid var(--bord2)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
+      <div className="overlay-view" style={{ background: 'transparent', padding: '40px', width: overlayWidth ?? '100%', height: overlayHeight ?? 'auto', fontFamily: 'var(--fb)' }}>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9, y: 20 }} 
+          animate={{ opacity: 1, scale: 1, y: 0 }} 
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="card" 
+          style={{ 
+            background: 'rgba(13, 13, 24, 0.7)', 
+            backdropFilter: 'blur(30px)', 
+            width: '100%', 
+            padding, 
+            border: '1px solid rgba(255,255,255,0.1)', 
+            borderTop: '1px solid rgba(255,255,255,0.2)',
+            boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
+            borderRadius: '24px',
+            textAlign: 'center'
+          }}
+        >
           {showCountdown && (
-            <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-              <div style={{ fontSize: '11px', color: 'var(--gold)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '4px' }}>FALTAN PARA LAS ELECCIONES</div>
-              <div style={{ fontFamily: 'var(--fd)', fontSize, display: 'flex', justifyContent: 'center', gap: '15px' }}>
-                <div>{countdown.d}<span style={{ fontSize: '12px', color: 'var(--muted)', marginLeft: '4px' }}>D</span></div>
-                <div>{countdown.h.toString().padStart(2, '0')}<span style={{ fontSize: '12px', color: 'var(--muted)', marginLeft: '4px' }}>H</span></div>
-                <div>{countdown.m.toString().padStart(2, '0')}<span style={{ fontSize: '12px', color: 'var(--muted)', marginLeft: '4px' }}>M</span></div>
-                <div>{countdown.s.toString().padStart(2, '0')}<span style={{ fontSize: '12px', color: 'var(--muted)', marginLeft: '4px' }}>S</span></div>
+            <div style={{ marginBottom: showLeader || showStats ? '40px' : '0' }}>
+              <div style={{ fontSize: '13px', color: 'var(--gold)', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '12px', fontWeight: 700 }}>TIEMPO PARA EL CIERRE</div>
+              <div style={{ fontFamily: 'var(--fd)', fontSize, display: 'flex', justifyContent: 'center', gap: '30px', textShadow: '0 4px 20px rgba(212, 146, 10, 0.2)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>{countdown.d}<span style={{ fontSize: '14px', color: 'var(--soft)', letterSpacing: '0.1em' }}>DÍAS</span></div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>{countdown.h.toString().padStart(2, '0')}<span style={{ fontSize: '14px', color: 'var(--soft)', letterSpacing: '0.1em' }}>HORAS</span></div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>{countdown.m.toString().padStart(2, '0')}<span style={{ fontSize: '14px', color: 'var(--soft)', letterSpacing: '0.1em' }}>MIN</span></div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>{countdown.s.toString().padStart(2, '0')}<span style={{ fontSize: '14px', color: 'var(--soft)', letterSpacing: '0.1em' }}>SEG</span></div>
               </div>
             </div>
           )}
 
           {showLeader && (
-            <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: showStats ? '20px' : '0' }}>
-              <div style={{ fontSize: '10px', color: 'var(--muted)', marginBottom: '12px', letterSpacing: '0.1em' }}>LÍDER EN NUESTRA WEB</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <div style={{ width: '44px', height: '44px', borderRadius: '50%', border: `2px solid ${webTop.color}`, overflow: 'hidden' }}>
-                  {webTop.image ? <img src={webTop.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>{webTop.initials}</div>}
+            <div style={{ background: 'rgba(255,255,255,0.03)', padding: '24px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: showStats ? '30px' : '0' }}>
+              <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '16px', letterSpacing: '0.15em', fontWeight: 700 }}>CANDIDATO LÍDER EN VIVO</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '24px', textAlign: 'left' }}>
+                <div style={{ width: '70px', height: '70px', borderRadius: '50%', border: `3px solid ${webTop.color}`, overflow: 'hidden', boxShadow: `0 0 20px ${webTop.color}33` }}>
+                  {webTop.image ? <img src={webTop.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '20px' }}>{webTop.initials}</div>}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '16px', fontWeight: 600 }}>{webTop.nombre.toUpperCase()}</div>
-                  <div style={{ fontSize: '10px', color: 'var(--muted)' }}>{webTop.partido}</div>
+                  <div style={{ fontSize: '24px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.02em', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{webTop.nombre}</div>
+                  <div style={{ fontSize: '12px', color: 'var(--soft)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{webTop.partido}</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontFamily: 'var(--fd)', fontSize: '24px', color: webTop.color }}>{webTop.porcentaje}%</div>
+                  <div style={{ fontFamily: 'var(--fd)', fontSize: '42px', color: webTop.color, textShadow: `0 0 20px ${webTop.color}44` }}>{webTop.porcentaje}%</div>
                 </div>
               </div>
             </div>
           )}
 
           {showStats && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--muted)', padding: '10px 12px', background: 'rgba(255,255,255,0.04)', borderRadius: '10px' }}>
-              <span>Total votos: {data?.total?.toLocaleString() ?? '...'}</span>
-              <span>Participación: {data ? `${Math.round((data.total / (data.total + 1)) * 100)}%` : '...'}</span>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              <div style={{ padding: '20px', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ fontSize: '10px', color: 'var(--gold)', letterSpacing: '0.1em', marginBottom: '8px', fontWeight: 700 }}>VOTOS TOTALES</div>
+                <div style={{ fontFamily: 'var(--fd)', fontSize: '36px' }}>{data?.total?.toLocaleString() ?? '...'}</div>
+              </div>
+              <div style={{ padding: '20px', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ fontSize: '10px', color: 'var(--gold)', letterSpacing: '0.1em', marginBottom: '8px', fontWeight: 700 }}>PARTICIPACIÓN</div>
+                <div style={{ fontFamily: 'var(--fd)', fontSize: '36px' }}>{data ? `${Math.round((data.total / (data.total + 1)) * 100)}%` : '...'}</div>
+              </div>
             </div>
           )}
         </motion.div>
