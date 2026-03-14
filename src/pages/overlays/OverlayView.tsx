@@ -41,20 +41,19 @@ function GlassCard({
   style?: React.CSSProperties;
 }) {
   return (
-    <div
-      style={{
-        background: 'rgba(10,10,20,0.72)',
-        backdropFilter: 'blur(32px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(32px) saturate(180%)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderTop: '1px solid rgba(255,255,255,0.22)',
-        borderRadius: '20px',
-        boxShadow: accentColor
-          ? `0 24px 56px rgba(0,0,0,0.55), 0 0 0 1px ${accentColor}18, inset 0 1px 0 rgba(255,255,255,0.1)`
-          : '0 24px 56px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.1)',
-        ...style,
-      }}
-    >
+    <div style={{
+      background: 'rgba(10, 10, 20, 0.72)',
+      backdropFilter: 'blur(24px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+      borderRadius: '24px',
+      boxShadow: accentColor
+        ? `0 24px 80px -12px ${accentColor}33`
+        : '0 24px 80px -12px rgba(0,0,0,0.5)',
+      position: 'relative',
+      overflow: 'hidden',
+      height: '100%',
+      ...style
+    }}>
       {children}
     </div>
   );
@@ -106,11 +105,9 @@ function Avatar({ c, size = 72, useParty = false, style }: { c: CandidatoLive; s
   return (
     <div style={{
       width: size, height: size, borderRadius: radius,
-      border: `2px solid ${c.color}55`,
       overflow: 'hidden',
       background: `${c.color}18`,
       flexShrink: 0,
-      boxShadow: `0 0 0 4px ${c.color}12`,
       ...style
     }}>
       {src
@@ -125,13 +122,13 @@ function Avatar({ c, size = 72, useParty = false, style }: { c: CandidatoLive; s
 function EncuestasBlock({ c }: { c: CandidatoLive }) {
   return (
     <div style={{ marginTop: '14px', display: 'flex', gap: '12px' }}>
-      {([
-        { label: 'Datum', val: c.enc, clr: '#ff4444' },
-        { label: 'Ipsos', val: c.sim, clr: 'var(--gold)' },
-      ] as const).map(s => (
-        <div key={s.label} style={{ flex: 1, background: 'rgba(255,255,255,0.04)', borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-          <div style={{ fontFamily: 'var(--fd)', fontSize: '24px', color: s.clr }}>{s.val}%</div>
-          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.35)', marginTop: '3px' }}>{s.label}</div>
+          {[
+        { l: 'Datum', v: c.enc, c: '#ff4444' },
+        { l: 'Ipsos', v: c.sim, c: 'var(--gold)' },
+      ].map(e => (
+        <div key={e.l} style={{ flex: 1, padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', textAlign: 'center' }}>
+          <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', marginBottom: '4px', textTransform: 'uppercase' }}>{e.l}</div>
+          <div style={{ fontFamily: 'var(--fd)', fontSize: '20px', color: e.c }}>{e.v}%</div>
         </div>
       ))}
     </div>
@@ -201,8 +198,10 @@ function CandidateOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: U
             <div style={{ marginTop: '12px' }}>
               <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.2em', marginBottom: '7px' }}>PROPUESTAS</div>
               {c.props.map((p, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '7px', marginBottom: '5px' }}>
-                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: c.color, marginTop: '5px', flexShrink: 0 }} />
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px' }}>
+                  <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 700, color: 'rgba(255,255,255,0.4)' }}>
+                    {i + 1}
+                  </div>
                   <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.62)', lineHeight: 1.5 }}>{p}</span>
                 </div>
               ))}
@@ -323,15 +322,20 @@ function TopOverlay({ resSorted, ep, vts }: { resSorted: CandidatoLive[]; ep: UR
 
 /* OVERLAY: summary / totals */
 function SummaryOverlay({
-  data, resSorted, countdown, ep, mode,
+  data, resSorted, encSorted, simSorted, countdown, ep, mode,
 }: {
   data: ElectionData;
   resSorted: CandidatoLive[];
+  encSorted: CandidatoLive[];
+  simSorted: CandidatoLive[];
   countdown: OverlayViewProps['countdown'];
   ep: URLSearchParams;
   mode: string;
 }) {
   const top = resSorted[0];
+  const topEnc = encSorted[0];
+  const topSim = simSorted[0];
+
   const showLeader = flag(ep, 'leader', mode === 'summary');
   const showCountdown = flag(ep, 'countdown', mode === 'summary');
   const showStats = flag(ep, 'stats', mode === 'totals');
@@ -343,6 +347,20 @@ function SummaryOverlay({
   const small = ep.get('size') === 'small';
   const fsNum = small ? 38 : 56;
   const pad = small ? 18 : 26;
+
+  const PollLeader = ({ c, label, val, color }: { c: CandidatoLive; label: string; val: number; color: string }) => (
+    <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '14px', padding: '14px', flex: 1 }}>
+      <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.18em', marginBottom: '10px', textTransform: 'uppercase' }}>{label}</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left' }}>
+        <Avatar c={c} size={40} useParty={showParty} />
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: '15px', fontWeight: 800, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{showParty ? c.partido : c.nombre}</div>
+          <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.38)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: '1px' }}>{showParty ? c.nombre : c.partido}</div>
+        </div>
+        <div style={{ fontFamily: 'var(--fd)', fontSize: '24px', color }}>{val}%</div>
+      </div>
+    </div>
+  );
 
   return (
     <motion.div initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.5 }}>
@@ -364,7 +382,7 @@ function SummaryOverlay({
                   { v: String(countdown.s).padStart(2, '0'), l: 'SEG' },
                 ].map(({ v, l }) => (
                   <div key={l} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
-                    <span style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)', borderRadius: '10px', padding: `4px ${small ? 9 : 13}px`, minWidth: small ? '42px' : '58px', color: '#fff' }}>{v}</span>
+                    <span style={{ background: 'rgba(212,175,55,0.08)', borderRadius: '10px', padding: `4px ${small ? 9 : 13}px`, minWidth: small ? '42px' : '58px', color: '#fff' }}>{v}</span>
                     <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.12em' }}>{l}</span>
                   </div>
                 ))}
@@ -372,7 +390,7 @@ function SummaryOverlay({
             </div>
           )}
           {showLeader && top && (
-            <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', padding: '14px', marginBottom: showStats || showUrl ? '14px' : 0 }}>
+            <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '14px', padding: '14px', marginBottom: showEnc || showStats || showUrl ? '14px' : 0 }}>
               <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.18em', marginBottom: '10px' }}>{showParty ? 'PARTIDO LÍDER EN VIVO' : 'CANDIDATO LÍDER EN VIVO'}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', textAlign: 'left' }}>
                 <Avatar c={top} size={50} useParty={showParty} />
@@ -382,7 +400,12 @@ function SummaryOverlay({
                 </div>
                 <div style={{ fontFamily: 'var(--fd)', fontSize: '34px', color: top.color }}>{top.porcentaje}%</div>
               </div>
-              {showEnc && <EncuestasBlock c={top} />}
+            </div>
+          )}
+          {showEnc && topEnc && topSim && (
+            <div style={{ display: 'flex', gap: '12px', marginBottom: showStats || showUrl ? '14px' : 0 }}>
+              <PollLeader c={topEnc} label="Líder datum" val={topEnc.enc} color="#ff4444" />
+              <PollLeader c={topSim} label="Líder ipsos" val={topSim.sim} color="var(--gold)" />
             </div>
           )}
           {showStats && (
@@ -391,7 +414,7 @@ function SummaryOverlay({
                 { label: 'VOTOS TOTALES', value: data.total?.toLocaleString() ?? '…' },
                 { label: 'PARTICIPACIÓN', value: data.total ? `${Math.round((data.total / (data.total + 1)) * 100)}%` : '…' },
               ].map(({ label, value }) => (
-                <div key={label} style={{ padding: '14px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div key={label} style={{ padding: '14px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
                   <div style={{ fontSize: '9px', color: 'var(--gold)', letterSpacing: '0.12em', marginBottom: '5px', fontWeight: 700 }}>{label}</div>
                   <div style={{ fontFamily: 'var(--fd)', fontSize: '26px' }}>{value}</div>
                 </div>
@@ -409,6 +432,7 @@ function SummaryOverlay({
     </motion.div>
   );
 }
+
 
 
 /* OVERLAY: ticker */
@@ -492,7 +516,7 @@ function LowerThirdOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: 
   if (style === 'pill') {
     return (
       <motion.div initial={{ y: 20, opacity: 0, scale: 0.95 }} animate={{ y: 0, opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'rgba(10,10,20,0.85)', backdropFilter: 'blur(20px)', borderRadius: '99px', padding: '7px 18px 7px 7px', border: `1px solid ${c.color}44`, fontFamily: 'var(--fb)' }}>
+        style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'rgba(10,10,20,0.85)', backdropFilter: 'blur(20px)', borderRadius: '99px', padding: '7px 18px 7px 7px', fontFamily: 'var(--fb)' }}>
         <Avatar c={c} size={34} />
         <div>
           <div style={{ fontSize: '13px', fontWeight: 700, color: '#fff' }}>{customName}</div>
@@ -607,7 +631,7 @@ function BarsOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSea
               {topN.map((c, i) => (
                 <motion.div key={c.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.07 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '9px', marginBottom: '3px' }}>
-                    <Avatar c={c} size={20} useParty={ep.get('party') === '1'} style={{ border: `1px solid ${c.color}44`, boxShadow: 'none' }} />
+                    <Avatar c={c} size={20} useParty={ep.get('party') === '1'} style={{ boxShadow: 'none' }} />
                     <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {ep.get('party') === '1' ? c.partido : c.nombre}
                     </span>
@@ -655,17 +679,22 @@ export default function OverlayView({ data, countdown, vts, demo }: OverlayViewP
   const overlayW = parseDim(ep.get('w') ?? ep.get('width'));
   const overlayH = parseDim(ep.get('h') ?? ep.get('height'));
 
-  const resSorted = useMemo<CandidatoLive[]>(() => {
-    if (!data) return [];
-    return [...(data.candidatos as CandidatoLive[])].sort((a, b) => b.votos - a.votos || b.enc - a.enc);
+  const { resSorted, encSorted, simSorted } = useMemo(() => {
+    if (!data) return { resSorted: [], encSorted: [], simSorted: [] };
+    const candidates = [...(data.candidatos as CandidatoLive[])];
+    return {
+      resSorted: [...candidates].sort((a, b) => b.votos - a.votos || b.enc - a.enc),
+      encSorted: [...candidates].sort((a, b) => b.enc - a.enc || b.votos - a.votos),
+      simSorted: [...candidates].sort((a, b) => b.sim - a.sim || b.votos - a.votos),
+    };
   }, [data]);
 
   const outer: React.CSSProperties = {
-    background: 'transparent',
-    width: overlayW ?? '100%',
-    height: overlayH ?? 'auto',
-    boxSizing: 'border-box',
-    fontFamily: 'var(--fb)',
+    width: overlayW,
+    height: overlayH,
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column'
   };
 
   if (!data) {
@@ -676,14 +705,18 @@ export default function OverlayView({ data, countdown, vts, demo }: OverlayViewP
     );
   }
 
-  const wrap = (node: React.ReactNode) => <div style={outer}>{node}</div>;
+  const wrap = (node: React.ReactNode) => (
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {node}
+    </div>
+  );
 
   switch (overlayMode) {
     case 'candidate': return wrap(<CandidateOverlay resSorted={resSorted} ep={ep} />);
     case 'party': return wrap(<PartyOverlay resSorted={resSorted} ep={ep} />);
     case 'top': return wrap(<TopOverlay resSorted={resSorted} ep={ep} vts={vts} />);
     case 'summary':
-    case 'totals': return wrap(<SummaryOverlay data={data} resSorted={resSorted} countdown={countdown} ep={ep} mode={overlayMode} />);
+    case 'totals': return wrap(<SummaryOverlay data={data} resSorted={resSorted} encSorted={encSorted} simSorted={simSorted} countdown={countdown} ep={ep} mode={overlayMode} />);
     case 'ticker': return wrap(<TickerOverlay resSorted={resSorted} data={data} ep={ep} />);
     case 'lower-third': return wrap(<LowerThirdOverlay resSorted={resSorted} ep={ep} />);
     case 'alert': return wrap(<AlertOverlay resSorted={resSorted} ep={ep} />);

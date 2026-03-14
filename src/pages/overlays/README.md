@@ -32,14 +32,14 @@ Muestra el ranking de los mejores resultados.
 - `n`: Número de elementos a mostrar (por defecto 5, máx 10).
 - `party`: Mostrar partidos (1) o candidatos (0) como principal.
 
-### `summary` / `totals`
+- `summary` / `totals`
 Resumen de la elección y estadísticas globales.
 - `leader`: Mostrar sección de líder (1 o automático en summary).
 - `countdown`: Mostrar cronómetro (1 o automático en summary).
 - `stats`: Mostrar estadísticas globales (1 o automático en totals).
-- `party`: Mostrar líder por partido (1) o candidato (0).
+- `party`: Mostrar líderes por partido (1) o candidato (0). Afecta a líder en vivo y líderes de encuestas.
 - `date`: Mostrar fecha de elección "DOMINGO 12 DE ABRIL, 2026" (1).
-- `e`: Mostrar encuestas (Ipsos/Datum) del líder (1).
+- `e`: Mostrar líderes independientes de encuestas (Ipsos/Datum) (1).
 - `url`: Mostrar enlace `vote.auralixpe.xyz` al final (1).
 - `size`: `small` para una versión más compacta.
 
