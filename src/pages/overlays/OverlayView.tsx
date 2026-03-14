@@ -33,11 +33,9 @@ function flag(p: URLSearchParams, key: string, def: boolean): boolean {
 {/* shared primitives */ }
 function GlassCard({
   children,
-  accentColor,
   style,
 }: {
   children: React.ReactNode;
-  accentColor?: string;
   style?: React.CSSProperties;
 }) {
   return (
@@ -46,9 +44,7 @@ function GlassCard({
       backdropFilter: 'blur(24px) saturate(180%)',
       WebkitBackdropFilter: 'blur(24px) saturate(180%)',
       borderRadius: '0',
-      boxShadow: accentColor
-        ? `0 24px 80px -12px ${accentColor}33`
-        : '0 24px 80px -12px rgba(0,0,0,0.5)',
+      boxShadow: 'none',
       position: 'relative',
       overflow: 'hidden',
       height: '100%',
@@ -178,7 +174,7 @@ function CandidateOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: U
       animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
       transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
     >
-      <GlassCard accentColor={c.color}>
+      <GlassCard>
         <ColorStripe color={c.color} />
         <div style={{ padding: '20px 24px 18px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
@@ -233,7 +229,7 @@ function PartyOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSe
       animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
       transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
     >
-      <GlassCard accentColor={c.color}>
+      <GlassCard>
         <ColorStripe color={c.color} />
         <div style={{ padding: '20px 24px 18px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
@@ -574,7 +570,7 @@ function AlertOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSe
         exit={{ opacity: 0, y: 30, scale: 0.9 }}
         transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
       >
-        <GlassCard accentColor={c?.color}>
+        <GlassCard>
           <motion.div
             animate={{ opacity: [0.6, 1, 0.6] }}
             transition={{ repeat: Infinity, duration: 2 }}
@@ -705,7 +701,7 @@ export default function OverlayView({ data, countdown, vts, demo }: OverlayViewP
   }
 
   const wrap = (node: React.ReactNode) => (
-    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div style={outer}>
       {node}
     </div>
   );
