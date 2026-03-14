@@ -45,7 +45,7 @@ function GlassCard({
       background: 'rgba(10, 10, 20, 0.72)',
       backdropFilter: 'blur(24px) saturate(180%)',
       WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-      borderRadius: '24px',
+      borderRadius: '0',
       boxShadow: accentColor
         ? `0 24px 80px -12px ${accentColor}33`
         : '0 24px 80px -12px rgba(0,0,0,0.5)',
@@ -61,12 +61,12 @@ function GlassCard({
 
 function LiveBar({ pct, color }: { pct: number; color: string }) {
   return (
-    <div style={{ height: '5px', background: 'rgba(255,255,255,0.07)', borderRadius: '99px', overflow: 'hidden' }}>
+    <div style={{ height: '5px', background: 'rgba(255,255,255,0.07)', borderRadius: '0', overflow: 'hidden' }}>
       <motion.div
         initial={{ width: 0 }}
         animate={{ width: `${pct}%` }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        style={{ height: '100%', background: `linear-gradient(90deg,${color}99,${color})`, borderRadius: '99px' }}
+        style={{ height: '100%', background: `linear-gradient(90deg,${color}99,${color})`, borderRadius: '0' }}
       />
     </div>
   );
@@ -87,7 +87,7 @@ function LiveDot() {
 
 function ColorStripe({ color }: { color: string }) {
   return (
-    <div style={{ height: '3px', background: `linear-gradient(90deg,${color},${color}55,transparent)`, borderRadius: '20px 20px 0 0' }} />
+    <div style={{ height: '3px', background: `linear-gradient(90deg,${color},${color}55,transparent)`, borderRadius: '0' }} />
   );
 }
 
@@ -99,7 +99,7 @@ function ColorStripe({ color }: { color: string }) {
 function Avatar({ c, size = 72, useParty = false, style }: { c: CandidatoLive; size?: number; useParty?: boolean; style?: React.CSSProperties }) {
   const src = useParty ? c.logo : c.image;
   const label = useParty ? c.partido : c.initials;
-  const radius = useParty ? '8px' : '50%';
+  const radius = useParty ? '0' : '50%';
   const objectFit = useParty ? 'contain' : 'cover';
 
   return (
@@ -126,7 +126,7 @@ function EncuestasBlock({ c }: { c: CandidatoLive }) {
         { l: 'Datum', v: c.enc, c: '#ff4444' },
         { l: 'Ipsos', v: c.sim, c: 'var(--gold)' },
       ].map(e => (
-        <div key={e.l} style={{ flex: 1, padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', textAlign: 'center' }}>
+        <div key={e.l} style={{ flex: 1, padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '0', textAlign: 'center' }}>
           <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', marginBottom: '4px', textTransform: 'uppercase' }}>{e.l}</div>
           <div style={{ fontFamily: 'var(--fd)', fontSize: '20px', color: e.c }}>{e.v}%</div>
         </div>
@@ -140,7 +140,7 @@ function MetaBadges({ c, rank, showRank, showIdeo }: { c: CandidatoLive; rank: n
   if (!showRank && !showIdeo) return null;
   return (
     <div style={{ display: 'flex', gap: '7px', marginTop: '5px', alignItems: 'center' }}>
-      {showIdeo && <span style={{ fontSize: '10px', padding: '2px 7px', borderRadius: '4px', border: `1px solid ${c.color}44`, color: c.color, background: `${c.color}12` }}>{c.ideo}</span>}
+      {showIdeo && <span style={{ fontSize: '10px', padding: '2px 7px', borderRadius: '0', border: `1px solid ${c.color}44`, color: c.color, background: `${c.color}12` }}>{c.ideo}</span>}
       {showRank && <span style={{ fontSize: '11px', color: 'rgba(212,175,55,0.9)', fontFamily: 'var(--fd)' }}>#{rank}</span>}
     </div>
   );
@@ -198,8 +198,8 @@ function CandidateOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: U
             <div style={{ marginTop: '12px' }}>
               <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.2em', marginBottom: '7px' }}>PROPUESTAS</div>
               {c.props.map((p, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px' }}>
-                  <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 700, color: 'rgba(255,255,255,0.4)' }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', background: 'rgba(255,255,255,0.02)', borderRadius: '0' }}>
+                  <div style={{ width: '24px', height: '24px', borderRadius: '0', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 700, color: 'rgba(255,255,255,0.4)' }}>
                     {i + 1}
                   </div>
                   <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.62)', lineHeight: 1.5 }}>{p}</span>
@@ -272,7 +272,7 @@ function TopOverlay({ resSorted, ep, vts }: { resSorted: CandidatoLive[]; ep: UR
         <div style={{ padding: '20px 24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ background: 'linear-gradient(135deg,#D4920A,#f5c842)', padding: '6px', borderRadius: '9px' }}>
+              <div style={{ background: 'linear-gradient(135deg,#D4920A,#f5c842)', padding: '6px', borderRadius: '0' }}>
                 <Trophy size={16} color="#000" />
               </div>
               <span style={{ fontFamily: 'var(--fd)', fontSize: '20px', letterSpacing: '0.04em' }}>TOP {count} {showParty ? 'PARTIDOS' : 'CANDIDATOS'}</span>
@@ -288,12 +288,12 @@ function TopOverlay({ resSorted, ep, vts }: { resSorted: CandidatoLive[]; ep: UR
                 transition={{ delay: i * 0.07, duration: 0.4 }}
                 style={{
                   display: 'flex', alignItems: 'center', gap: '12px',
-                  padding: '9px 12px', borderRadius: '12px',
+                  padding: '9px 12px', borderRadius: '0',
                   background: i === 0 ? 'rgba(212,175,55,0.1)' : 'rgba(255,255,255,0.03)',
                   position: 'relative', overflow: 'hidden',
                 }}
               >
-                <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${(c.votos / maxVoto) * 100}%`, background: `${c.color}08`, borderRadius: '12px' }} />
+                <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${(c.votos / maxVoto) * 100}%`, background: `${c.color}08`, borderRadius: '0' }} />
                 <span style={{ fontFamily: 'var(--fd)', fontSize: '18px', width: '22px', textAlign: 'center', color: i === 0 ? 'var(--gold)' : 'rgba(255,255,255,0.3)', flexShrink: 0, zIndex: 1 }}>{i + 1}</span>
                 <div style={{ zIndex: 1 }}>
                   <Avatar c={c} size={36} useParty={showParty} />
@@ -348,7 +348,7 @@ function SummaryOverlay({
   const pad = small ? 18 : 26;
 
   const PollLeader = ({ c, label, val, color }: { c: CandidatoLive; label: string; val: number; color: string }) => (
-    <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '14px', padding: '14px', flex: 1 }}>
+    <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '0', padding: '14px', flex: 1 }}>
       <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.18em', marginBottom: '10px', textTransform: 'uppercase' }}>{label}</div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'left' }}>
         <Avatar c={c} size={40} useParty={showParty} />
@@ -381,7 +381,7 @@ function SummaryOverlay({
                   { v: String(countdown.s).padStart(2, '0'), l: 'SEG' },
                 ].map(({ v, l }) => (
                   <div key={l} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
-                    <span style={{ background: 'rgba(212,175,55,0.08)', borderRadius: '10px', padding: `4px ${small ? 9 : 13}px`, minWidth: small ? '42px' : '58px', color: '#fff' }}>{v}</span>
+                    <span style={{ background: 'rgba(212,175,55,0.08)', borderRadius: '0', padding: `4px ${small ? 9 : 13}px`, minWidth: small ? '42px' : '58px', color: '#fff' }}>{v}</span>
                     <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.12em' }}>{l}</span>
                   </div>
                 ))}
@@ -389,7 +389,7 @@ function SummaryOverlay({
             </div>
           )}
           {showLeader && top && (
-            <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '14px', padding: '14px', marginBottom: showEnc || showStats || showUrl ? '14px' : 0 }}>
+            <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '0', padding: '14px', marginBottom: showEnc || showStats || showUrl ? '14px' : 0 }}>
               <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.18em', marginBottom: '10px' }}>{showParty ? 'PARTIDO LÍDER EN VIVO' : 'CANDIDATO LÍDER EN VIVO'}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', textAlign: 'left' }}>
                 <Avatar c={top} size={50} useParty={showParty} />
@@ -413,7 +413,7 @@ function SummaryOverlay({
                 { label: 'VOTOS TOTALES', value: data.total?.toLocaleString() ?? '…' },
                 { label: 'PARTICIPACIÓN', value: data.total ? `${Math.round((data.total / (data.total + 1)) * 100)}%` : '…' },
               ].map(({ label, value }) => (
-                <div key={label} style={{ padding: '14px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
+                <div key={label} style={{ padding: '14px', background: 'rgba(255,255,255,0.03)', borderRadius: '0' }}>
                   <div style={{ fontSize: '9px', color: 'var(--gold)', letterSpacing: '0.12em', marginBottom: '5px', fontWeight: 700 }}>{label}</div>
                   <div style={{ fontFamily: 'var(--fd)', fontSize: '26px' }}>{value}</div>
                 </div>
@@ -515,7 +515,7 @@ function LowerThirdOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: 
   if (style === 'pill') {
     return (
       <motion.div initial={{ y: 20, opacity: 0, scale: 0.95 }} animate={{ y: 0, opacity: 1, scale: 1 }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'rgba(10,10,20,0.85)', backdropFilter: 'blur(20px)', borderRadius: '99px', padding: '7px 18px 7px 7px', fontFamily: 'var(--fb)' }}>
+        style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: 'rgba(10,10,20,0.85)', backdropFilter: 'blur(20px)', borderRadius: '0', padding: '7px 18px 7px 7px', fontFamily: 'var(--fb)' }}>
         <Avatar c={c} size={34} />
         <div>
           <div style={{ fontSize: '13px', fontWeight: 700, color: '#fff' }}>{customName}</div>
@@ -578,7 +578,7 @@ function AlertOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSe
           <motion.div
             animate={{ opacity: [0.6, 1, 0.6] }}
             transition={{ repeat: Infinity, duration: 2 }}
-            style={{ height: '3px', background: `linear-gradient(90deg,transparent,${accent},transparent)`, borderRadius: '20px 20px 0 0' }}
+            style={{ height: '3px', background: `linear-gradient(90deg,transparent,${accent},transparent)`, borderRadius: '0' }}
           />
           <div style={{ padding: '16px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -636,12 +636,12 @@ function BarsOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSea
                     </span>
                     <span style={{ fontFamily: 'var(--fd)', fontSize: '13px', color: c.color, minWidth: '36px', textAlign: 'right' }}>{c.porcentaje}%</span>
                   </div>
-                  <div style={{ height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '99px', overflow: 'hidden' }}>
+                  <div style={{ height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '0', overflow: 'hidden' }}>
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${(c.porcentaje / maxPct) * 100}%` }}
                       transition={{ delay: i * 0.07 + 0.1, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                      style={{ height: '100%', background: `linear-gradient(90deg,${c.color}77,${c.color})`, borderRadius: '99px' }}
+                      style={{ height: '100%', background: `linear-gradient(90deg,${c.color}77,${c.color})`, borderRadius: '0' }}
                     />
                   </div>
                 </motion.div>
@@ -652,12 +652,12 @@ function BarsOverlay({ resSorted, ep }: { resSorted: CandidatoLive[]; ep: URLSea
               {topN.map((c, i) => (
                 <div key={c.id} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
                   <span style={{ fontFamily: 'var(--fd)', fontSize: '10px', color: c.color }}>{c.porcentaje}%</span>
-                  <div style={{ width: '100%', background: 'rgba(255,255,255,0.05)', borderRadius: '4px 4px 0 0', overflow: 'hidden', height: '96px', display: 'flex', alignItems: 'flex-end' }}>
+                  <div style={{ width: '100%', background: 'rgba(255,255,255,0.05)', borderRadius: '0', overflow: 'hidden', height: '96px', display: 'flex', alignItems: 'flex-end' }}>
                     <motion.div
                       initial={{ height: 0 }}
                       animate={{ height: `${(c.porcentaje / maxPct) * 100}%` }}
                       transition={{ delay: i * 0.07, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                      style={{ width: '100%', background: `linear-gradient(to top,${c.color},${c.color}55)`, borderRadius: '3px 3px 0 0' }}
+                      style={{ width: '100%', background: `linear-gradient(to top,${c.color},${c.color}55)`, borderRadius: '0' }}
                     />
                   </div>
                   <span style={{ fontSize: '8px', color: 'rgba(255,255,255,0.3)', textAlign: 'center', lineHeight: 1.2 }}>{c.nombre.split(' ')[0]}</span>
