@@ -59,7 +59,7 @@ export default function OverlayView({ data, countdown, vts, demo }: OverlayViewP
 
     return (
       <div className="overlay-view" style={{ background: 'transparent', padding: '20px', width: overlayWidth ?? '100%', height: overlayHeight ?? 'auto', boxSizing: 'border-box', fontFamily: 'var(--fb)' }}>
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="modal" style={{ border: `1px solid ${c.color}40`, background: 'rgba(7,7,12,0.98)', transform: 'none', maxHeight: 'none' }}>
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="modal" style={{ border: `1px solid ${c.color}40`, background: 'rgba(13, 13, 24, 0.85)', backdropFilter: 'blur(20px)', transform: 'none', maxHeight: 'none', boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 20px ${c.color}22` }}>
           <div className="mhero" style={{ '--mc': c.color } as any}>
             <div className="mhero-in" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '18px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -143,7 +143,7 @@ export default function OverlayView({ data, countdown, vts, demo }: OverlayViewP
 
     return (
       <div className="overlay-view" style={{ background: 'transparent', padding: '20px', width: overlayWidth ?? '100%', height: overlayHeight ?? 'auto', boxSizing: 'border-box', fontFamily: 'var(--fb)' }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card" style={{ background: 'rgba(7,7,12,0.92)', backdropFilter: 'blur(12px)', width: '100%', padding: '20px', border: '1px solid var(--bord2)' }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card" style={{ background: 'rgba(13, 13, 24, 0.85)', backdropFilter: 'blur(20px)', width: '100%', padding: '20px', border: '1px solid var(--bord2)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px', borderBottom: '1px solid var(--bord)', paddingBottom: '12px' }}>
             <Trophy size={20} color="var(--gold)" />
             <div style={{ fontFamily: 'var(--fd)', fontSize: '24px', letterSpacing: '0.05em' }}>TOP {count} — RESULTADOS EN VIVO</div>
@@ -183,7 +183,7 @@ export default function OverlayView({ data, countdown, vts, demo }: OverlayViewP
 
     return (
       <div className="overlay-view" style={{ background: 'transparent', padding: '20px', width: overlayWidth ?? '100%', height: overlayHeight ?? 'auto', fontFamily: 'var(--fb)' }}>
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="card" style={{ background: 'rgba(7,7,12,0.96)', backdropFilter: 'blur(16px)', width: '100%', padding, border: '1px solid var(--bord2)' }}>
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="card" style={{ background: 'rgba(13, 13, 24, 0.85)', backdropFilter: 'blur(20px)', width: '100%', padding, border: '1px solid var(--bord2)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
           {showCountdown && (
             <div style={{ textAlign: 'center', marginBottom: '24px' }}>
               <div style={{ fontSize: '11px', color: 'var(--gold)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '4px' }}>FALTAN PARA LAS ELECCIONES</div>

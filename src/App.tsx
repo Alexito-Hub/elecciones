@@ -54,6 +54,11 @@ function OverlayPage() {
     };
   }, []);
 
+  useEffect(() => {
+    document.body.classList.add('overlay-body');
+    return () => document.body.classList.remove('overlay-body');
+  }, []);
+
   return <OverlayView data={data} countdown={countdown} vts={vts} />;
 }
 
